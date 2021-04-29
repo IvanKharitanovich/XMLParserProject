@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.example.com/medicins"
+        xmlns:tns="http://www.example.com/medicins"
+        elementFormDefault="qualified">
+    <element name="medicins">
+        <complexType>
+            <sequence>
+                <element name="medicine"
+                         type="tns:Medicine"
+                         minOccurs="1"
+                         maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <complexType name="Medicine">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="organisationName" type="string"/>
+            <element name="group" type="tns:Group"/>
+            <element name="analogs"
+                     minOccurs="0"
+                     maxOccurs="unbounded">
+                <simpleType>
+                    <list itemType="string"/>
+                </simpleType>
+            </element>
+            <element name="version" type="tns:Version"/>
+            <element name="issueDate" type="date"/>
+            <element name="expirationDate" type="date"/>
+            <element name="registerOrganisationName" type="string"/>
+            <element name="package" type="tns:Package"/>
+            <element name="dosage" type="tns:Dosage"/>
+        </sequence>
+        <attribute name="medicineId" type="tns:MedicineId" use="required"/>
+        <attribute name="recipeStatusNeeded" use="optional" default="true">
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="true"/>
+                    <enumeration value="false"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+    </complexType>
+
+    <simpleType name="MedicineId">
+        <restriction base="ID">
+            <pattern value="([A-Z])[0-9]{5,10}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Group">
+        <restriction base="string">
+            <enumeration value="ANALGESICS"/>
+            <enumeration value="ANTIBIOTIC"/>
+            <enumeration value="ANTISEPTIC"/>
+            <enumeration value="HORMONE"/>
+            <enumeration value="STIMULANTS"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Version">
+        <restriction base="string">
+            <enumeration value="TABLET"/>
+            <enumeration value="LIQUID"/>
+            <enumeration value="CAPSULES"/>
+            <enumeration value="DROPS"/>
+            <enumeration value="INJECTIONS"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="Package">
+        <sequence>
+            <element name="packageType" type="tns:PackageType"/>
+            <element name="amount" type="double"/>
+            <element name="price" type="decimal"/>
+        </sequence>
+    </complexType>
+
+    <simpleType name="PackageType">
+        <restriction base="string">
+            <enumeration value="BOTTLES"/>
+            <enumeration value="BLISTER_PACK"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="Dosage">
+        <sequence>
+            <element name="dosageAmount" type="double"/>
+            <element name="frequency" type="tns:Frequency"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="Frequency">
+        <sequence>
+            <element name="days" type="int"/>
+            <element name="perDay" type="int"/>
+        </sequence>
+    </complexType>
+</schema>
